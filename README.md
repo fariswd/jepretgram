@@ -1,5 +1,6 @@
 # jepretgram
 Sebuah aplikasi sharing foto  
+http://jepretgram.masfaris.com
 
 ## Use this app?
 1. Start server

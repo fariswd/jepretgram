@@ -54,7 +54,7 @@ const actions = {
     if (localStorage.getItem('userData')) {
       let userData = JSON.parse(localStorage.getItem('userData'))
       let tokenfb = userData.tokenfb
-      axios.post('http://localhost:3000/api/signfb', [], {
+      axios.post('http://vps.masfaris.com:3005/api/signfb', [], {
         headers: { token: tokenfb }
       })
       .then(({ data }) => {
@@ -73,7 +73,7 @@ const actions = {
     }
   },
   getFbAuth: function ({ commit }, tokenfb) {
-    axios.post('http://localhost:3000/api/signfb', [], {
+    axios.post('http://vps.masfaris.com:3005/api/signfb', [], {
       headers: { token: tokenfb }
     })
     .then(({ data }) => {
@@ -93,7 +93,7 @@ const actions = {
   postNewJepret: function ({ commit }, newJepret) {
     let userData = JSON.parse(localStorage.getItem('userData'))
     let token = userData.token
-    axios.post('http://localhost:3000/api/jepret', {
+    axios.post('http://vps.masfaris.com:3005/api/jepret', {
       imageurl: newJepret.imageurl,
       caption: newJepret.caption
     }, {
@@ -107,7 +107,7 @@ const actions = {
     })
   },
   getAllJeprets: function ({ commit }) {
-    axios.get('http://localhost:3000/api/jepret')
+    axios.get('http://vps.masfaris.com:3005/api/jepret')
     .then(({ data }) => {
       commit('saveAllJepret', data.jepretPost)
     })
@@ -116,7 +116,7 @@ const actions = {
     })
   },
   getJepret: function ({ commit }, jepret) {
-    axios.get('http://localhost:3000/api/jepret/' + jepret)
+    axios.get('http://vps.masfaris.com:3005/api/jepret/' + jepret)
     .then(response => {
       commit('saveJepreted', response.data.jepretPost)
     })
@@ -127,7 +127,7 @@ const actions = {
   delJepret: function ({ commit }, jepret) {
     let userData = JSON.parse(localStorage.getItem('userData'))
     let token = userData.token
-    axios.delete('http://localhost:3000/api/jepret/' + jepret._id, {
+    axios.delete('http://vps.masfaris.com:3005/api/jepret/' + jepret._id, {
       headers: { token: token }
     })
     .then(response => {
