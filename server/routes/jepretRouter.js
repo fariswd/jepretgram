@@ -30,7 +30,7 @@ router.put('/jepret/:id', verifyToken.loginState, jepretController.editJepret)
 router.delete('/jepret/:id', verifyToken.loginState, jepretController.delJepret)
 
 // | /api/jepret/:id/love | POST | token | like the jepret |
-// router.post('/jepret', verifyToken.loginState, jepretController.postBlog)
+router.post('/jepret/:id/love', verifyToken.loginState, jepretController.loveJepret)
 
 
 // | /api/signup  | POST | username & password  | Auth (Register) |

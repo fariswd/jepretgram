@@ -145,6 +145,28 @@ let delJepret = (req, res) => {
   })
 }
 
+let loveJepret = (req, res) => {
+  Jepret.findOne({ _id: req.params.id })
+  .then(result=>{
+    if(result._id == req.decoded._id) {
+      res.status(400).send({msg: 'cannot send love to yourself'})
+    } else {
+      let love = result.love
+      let pos = love.findIndex(function(e) {
+        return e == req.decoded._id
+      })
+      if (pos<0) {
+        love.push(req.decoded._id)
+      } else {
+        love.splice(pos, 1)
+      }
+    }
+  })
+  .catch(err=>{
+    res.status(400).send({msg: err})
+  })
+}
+
 let verify = (req, res) => {
   res.status(200).send({msg:"success"})
 }
@@ -179,5 +201,6 @@ module.exports = {
   delJepret,
   signin,
   signup,
-  signfb
+  signfb,
+  loveJepret
 };
