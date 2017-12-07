@@ -26,10 +26,23 @@ const mutations = {
 
 const actions = {
   checkLogin: function ({ commit }) {
-    if (localStorage.getItem('token')) {
-      this.getFbAuth(localStorage.getItem('token'))
+    if (localStorage.getItem('userData')) {
+      let tokenfb = JSON.parse(localStorage.getItem('userData')).token
+      axios.post('http://localhost:3000/api/signfb', [], {
+        headers: { token: tokenfb }
+      })
+      .then(({ data }) => {
+        if (data.msg === 'success') {
+          localStorage.setItem('userData', JSON.stringify(data))
+          commit('changeLoginStatus', data)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
     } else {
-      this.logout()
+      localStorage.removeItem('userData')
+      commit('clearData')
     }
   },
   getFbAuth: function ({ commit }, tokenfb) {

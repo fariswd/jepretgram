@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'checkLogin',
       'getFbAuth',
       'logout'
     ]),
@@ -47,6 +48,9 @@ export default {
     getUser: function (tokenfb) {
       this.getFbAuth(tokenfb)
     }
+  },
+  created: function () {
+    this.checkLogin()
   }
 }
 </script>
