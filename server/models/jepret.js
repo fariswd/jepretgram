@@ -4,15 +4,16 @@ const Schema = mongoose.Schema;
 
 mongoose.connect(process.env.DATABASE_URL);
 
-let blogSchema = new Schema({
+let jepretSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  title: String,
-  article: String
+  image: String,
+  imageurl: String,
+  caption: String
 });
 
-let Blog = mongoose.model('Blog', blogSchema);
+let Jepret = mongoose.model('Jepret', jepretSchema);
 
-module.exports = Blog;
+module.exports = Jepret;

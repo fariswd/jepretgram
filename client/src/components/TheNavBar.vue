@@ -22,8 +22,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   methods: {
+    ...mapActions([
+      'getFbAuth'
+    ]),
     getFbToken: function () {
       // eslint-disable-next-line
       FB.login((response) => {
@@ -34,7 +38,7 @@ export default {
       })
     },
     getUser: function (tokenfb) {
-      console.log(tokenfb)
+      this.getFbAuth(tokenfb)
     }
   }
 }

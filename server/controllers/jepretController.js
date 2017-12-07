@@ -1,13 +1,56 @@
 //require helper
 const hashPassword = require('../helpers/hashPassword')
+const jsonToken = require('../helpers/jsonToken')
+const FB = require('fb')
+const fb = new FB.Facebook({version: 'v2.11'})
 
 //require model
 const User = require('../models/user')
-const Blog = require('../models/blog')
+const Jepret = require('../models/jepret')
 
 let welcomePage = (req, res) => {
   res.send({msg: 'welcomePage'})
 }
+
+let signfb = (req, res) => {
+  FB.setAccessToken(req.headers.token)
+  FB.api('/me', { fields: ['id', 'name', 'email', 'picture'] }, (response)=>{
+    if(response.error) {
+      res.status(500).send({err: response.error})
+    } else {
+      let newUser = {
+        username: response.email,
+        name: response.name
+      }
+      let user = new User (newUser)
+      user.save()
+      .then(result => {
+        let tokenizer = {
+          _id: result._id,
+          name: result.name
+        }
+        jsonToken.signToken(tokenizer, (err, token) => {
+          if (err) {
+            res.status(500).send({err: err})
+          }
+          else {
+            res.status(200).send({
+              msg: "success",
+              token: token,
+              userId: tokenizer._id
+            })
+          }
+        })
+      })
+      .catch(err => {
+        res.status(500).send({
+          err: err
+        })
+      })
+    }
+  })
+}
+
 
 let signup = (req, res) => {
   let user = new User({
@@ -96,7 +139,7 @@ let editBlog = (req, res) => {
     .catch(err=>{
       res.status(500).send({msg:"unsuccess get blog post"})
     })
-    
+
   })
   .catch(err=>{
     res.status(400).send({msg: err})
@@ -112,12 +155,12 @@ let delBlog = (req, res) => {
         msg: "success",
         deleted: before
       })
-      
+
     })
     .catch(err=>{
       res.status(400).send({msg: err})
     })
-    
+
   })
   .catch(err=>{
     res.status(400).send({msg: err})
@@ -137,5 +180,5 @@ module.exports = {
   delBlog,
   signin,
   signup,
-  verify
+  signfb
 };

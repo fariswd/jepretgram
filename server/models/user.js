@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 mongoose.connect(process.env.DATABASE_URL);
 
 let userSchema = new Schema({
-  username: String,
+  email: String,
+  name: String,
   password: String
 });
 
