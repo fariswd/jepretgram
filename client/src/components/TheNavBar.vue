@@ -13,7 +13,8 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">SignIn</a></li>
+          <li ><button @click="getFbToken" class="btn margin-fix facebook-btn" type="button" name="button"><span class="fa fa-facebook-square"></span> Login with facebook</button></li>
+          <!-- <li >{{ dataUser.name }} <img :src="dataUser.picture" class="navbar-profile-picture"> <button @click="logout" type="button" class="btn btn-default fix-margin" name="button">logout</button></li> -->
         </ul>
       </div>
     </div>
@@ -22,8 +23,28 @@
 
 <script>
 export default {
+  methods: {
+    getFbToken: function () {
+      // eslint-disable-next-line
+      FB.login((response) => {
+        console.log(response)
+        this.getUser(response.authResponse.accessToken)
+      }, {
+        scope: 'public_profile, email'
+      })
+    },
+    getUser: function (tokenfb) {
+      console.log(tokenfb)
+    }
+  }
 }
 </script>
 
 <style lang="css">
+.margin-fix {
+ margin-top: 3px;
+}
+.facebook-btn {
+
+}
 </style>
