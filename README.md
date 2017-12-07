@@ -5,6 +5,7 @@ Sebuah aplikasi sharing foto
 1. Start server
 ```
 cd server
+rename .env-template to .env
 npm install
 npm start
 apps run on 3000
