@@ -13,8 +13,8 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
         <ul class="nav navbar-nav navbar-right">
-          <li ><button @click="getFbToken" class="btn margin-fix facebook-btn" type="button" name="button"><span class="fa fa-facebook-square"></span> Login with facebook</button></li>
-          <!-- <li >{{ dataUser.name }} <img :src="dataUser.picture" class="navbar-profile-picture"> <button @click="logout" type="button" class="btn btn-default fix-margin" name="button">logout</button></li> -->
+          <li v-if="!loginStatus"><button @click="getFbToken" class="btn margin-fix facebook-btn" type="button" name="button"><span class="fa fa-facebook-square"></span> Login with facebook</button></li>
+          <li v-else >{{ userData.name }} <button @click="logout" type="button" class="btn btn-default fix-margin" name="button">logout</button></li>
         </ul>
       </div>
     </div>
@@ -22,11 +22,18 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
+  computed: {
+    ...mapState([
+      'loginStatus',
+      'userData'
+    ])
+  },
   methods: {
     ...mapActions([
-      'getFbAuth'
+      'getFbAuth',
+      'logout'
     ]),
     getFbToken: function () {
       // eslint-disable-next-line

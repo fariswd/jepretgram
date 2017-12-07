@@ -14,26 +14,41 @@ const state = {
 
 const mutations = {
   changeLoginStatus: function (state, payload) {
-    console.log('di mutations', payload)
     state.userData = payload
     state.loginStatus = true
+  },
+  clearData: function (state) {
+    state.loginStatus = false
+    state.userData.userId = ''
+    state.userData.token = ''
   }
 }
 
 const actions = {
+  checkLogin: function ({ commit }) {
+    if (localStorage.getItem('token')) {
+      this.getFbAuth(localStorage.getItem('token'))
+    } else {
+      this.logout()
+    }
+  },
   getFbAuth: function ({ commit }, tokenfb) {
-    console.log('diactions', tokenfb)
     axios.post('http://localhost:3000/api/signfb', [], {
       headers: { token: tokenfb }
     })
     .then(({ data }) => {
       if (data.msg === 'success') {
+        localStorage.setItem('userData', JSON.stringify(data))
         commit('changeLoginStatus', data)
       }
     })
     .catch(err => {
       console.log(err)
     })
+  },
+  logout: function ({ commit }) {
+    localStorage.removeItem('userData')
+    commit('clearData')
   }
 }
 
