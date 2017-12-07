@@ -6,12 +6,13 @@ const jepretController = require('../controllers/jepretController')
 //require helper
 const hashPassword = require('../helpers/hashPassword')
 const verifyToken  = require('../middlewares/verifyToken')
+const checkStatus = require('../middlewares/checkStatus')
 
 //route
 router.get('/', jepretController.welcomePage)
 
 // | /api/signfb  | POST | fb(token) | Auth FB   |
-router.post('/signfb', jepretController.signfb)
+router.post('/signfb', checkStatus, jepretController.signfb)
 
 // | /api/jepret  | POST | token, image, caption | post new jepret |
 router.post('/jepret', verifyToken.loginState, jepretController.postBlog)
