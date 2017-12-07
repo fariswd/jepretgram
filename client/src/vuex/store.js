@@ -10,7 +10,8 @@ const state = {
     userId: '',
     token: '',
     tokenfb: ''
-  }
+  },
+  jepret: []
 }
 
 const mutations = {
@@ -23,6 +24,12 @@ const mutations = {
     state.userData.userId = ''
     state.userData.token = ''
     state.userData.tokenfb = ''
+  },
+  saveJepret: function (state, payload) {
+    state.jepret.unshift(payload)
+  },
+  saveAllJepret: function (state, payload) {
+    state.jepret = payload
   }
 }
 
@@ -66,6 +73,31 @@ const actions = {
   logout: function ({ commit }) {
     localStorage.removeItem('userData')
     commit('clearData')
+  },
+  postNewJepret: function ({ commit }, newJepret) {
+    let userData = JSON.parse(localStorage.getItem('userData'))
+    let token = userData.token
+    axios.post('http://localhost:3000/api/jepret', {
+      imageurl: newJepret.imageurl,
+      caption: newJepret.caption
+    }, {
+      headers: { token: token }
+    })
+    .then(({ data }) => {
+      commit('saveJepret', data.jepretPost)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  },
+  getAllJeprets: function ({ commit }) {
+    axios.get('http://localhost:3000/api/jepret')
+    .then(({ data }) => {
+      commit('saveAllJepret', data.jepretPost)
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 }
 

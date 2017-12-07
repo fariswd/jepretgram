@@ -56,7 +56,7 @@ let signfb = (req, res) => {
 let postJepret = (req, res) => {
   if(req.body.imageurl && req.body.caption) {
     let jepret = new Jepret({
-      userId: req.decoded.id,
+      userId: req.decoded._id,
       image: req.body.image,
       imageurl: req.body.imageurl,
       caption: req.body.caption
@@ -91,6 +91,7 @@ let getJepret = (req, res) => {
 }
 
 let getJeprets = (req, res) => {
+  console.log('---------------here')
   Jepret.find()
   .then(result=>{
     res.status(200).send({
@@ -148,7 +149,7 @@ let delJepret = (req, res) => {
 let loveJepret = (req, res) => {
   Jepret.findOne({ _id: req.params.id })
   .then(result=>{
-    if(result._id == req.decoded._id) {
+    if(result.userId == req.decoded._id) {
       res.status(400).send({msg: 'cannot send love to yourself'})
     } else {
       let love = result.love

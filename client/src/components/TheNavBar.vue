@@ -8,13 +8,16 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Jepretgram</a>
+        <router-link class="navbar-brand" :to="{ path: '/', params: {} }">Jepretgram</router-link>
       </div>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+        <ul class="nav navbar-nav navbar-left">
+          <li v-if="loginStatus"><router-link :to="{ path: '/jepret', params: {} }">Jepret New Moment</router-link></li>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
           <li v-if="!loginStatus"><button @click="getFbToken" class="btn margin-fix facebook-btn" type="button" name="button"><span class="fa fa-facebook-square"></span> Login with facebook</button></li>
-          <li v-else >{{ userData.name }} <button @click="logout" type="button" class="btn btn-default fix-margin" name="button">logout</button></li>
+          <li v-else >{{ userData.name }} <button @click="logout" type="button" class="btn btn-default margin-fix" name="button">logout</button></li>
         </ul>
       </div>
     </div>
