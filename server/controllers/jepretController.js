@@ -27,7 +27,7 @@ let signfb = (req, res) => {
       .then(result => {
         let tokenizer = {
           _id: result._id,
-          name: result.name
+          name: result.name,
         }
         jsonToken.signToken(tokenizer, (err, token) => {
           if (err) {
@@ -37,7 +37,9 @@ let signfb = (req, res) => {
             res.status(200).send({
               msg: "success",
               token: token,
-              userId: tokenizer._id
+              userId: tokenizer._id,
+              name: result.name,
+              tokenfb: req.headers.token
             })
           }
         })
@@ -51,6 +53,101 @@ let signfb = (req, res) => {
   })
 }
 
+let postJepret = (req, res) => {
+  if(req.body.imageurl && req.body.caption) {
+    let jepret = new Jepret({
+      userId: req.decoded.id,
+      image: req.body.image,
+      imageurl: req.body.imageurl,
+      caption: req.body.caption
+    })
+    jepret.save()
+    .then(result=>{
+      res.status(200).send({
+        msg:"success",
+        author: req.decoded.username,
+        jepretPost: result
+      })
+    })
+    .catch(err=>{
+      res.status(500).send({msg:"unsuccessfull post"})
+    })
+  } else {
+    res.status(400).send({msg: "empty title & article"})
+  }
+}
+
+let getJepret = (req, res) => {
+  Jepret.findOne({ _id: req.params.id })
+  .then(result=>{
+    res.status(200).send({
+      msg: "success",
+      jepretPost: result
+    })
+  })
+  .catch(err=>{
+    res.status(500).send({msg:"unsuccess get jepret post"})
+  })
+}
+
+let getJeprets = (req, res) => {
+  Jepret.find()
+  .then(result=>{
+    res.status(200).send({
+      msg: "success",
+      jepretPost: result
+    })
+  })
+  .catch(err=>{
+    res.status(500).send({msg:"unsuccess get blog post"})
+  })
+}
+
+let editJepret = (req, res) => {
+  Jepret.update({ _id: req.params.id }, {
+    caption: req.body.caption
+  })
+  .then(result=>{
+    Jepret.findOne({ _id: req.params.id })
+    .then(newEdit=>{
+      res.status(200).send({
+        msg: "success",
+        newJepretPost: newEdit
+      })
+    })
+    .catch(err=>{
+      res.status(500).send({msg:"unsuccess get blog post"})
+    })
+
+  })
+  .catch(err=>{
+    res.status(400).send({msg: err})
+  })
+}
+
+let delJepret = (req, res) => {
+  Jepret.findOne({ _id: req.params.id })
+  .then(before=>{
+    Jepret.remove({ _id: req.params.id })
+    .then(result=>{
+      res.status(200).send({
+        msg: "success",
+        deleted: before
+      })
+
+    })
+    .catch(err=>{
+      res.status(400).send({msg: err})
+    })
+  })
+  .catch(err=>{
+    res.status(400).send({msg: err})
+  })
+}
+
+let verify = (req, res) => {
+  res.status(200).send({msg:"success"})
+}
 
 let signup = (req, res) => {
   let user = new User({
@@ -73,111 +170,13 @@ let signin = (req, res) => {
   })
 }
 
-let postBlog = (req, res) => {
-  if(req.body.title && req.body.article) {
-    let blog = new Blog({
-      userId: req.decoded.id,
-      title: req.body.title,
-      article: req.body.article
-    })
-    blog.save()
-    .then(result=>{
-      res.status(200).send({
-        msg:"success",
-        author: req.decoded.username,
-        blogPost: result
-      })
-    })
-    .catch(err=>{
-      res.status(500).send({msg:"unsuccessfull post"})
-    })
-  } else {
-    res.status(400).send({msg: "empty title & article"})
-  }
-}
-
-let getBlog = (req, res) => {
-  Blog.findOne({ _id: req.params.id })
-  .then(result=>{
-    res.status(200).send({
-      msg: "success",
-      blogPost: result
-    })
-  })
-  .catch(err=>{
-    res.status(500).send({msg:"unsuccess get blog post"})
-  })
-}
-
-let getBlogs = (req, res) => {
-  Blog.find()
-  .then(result=>{
-    res.status(200).send({
-      msg: "success",
-      blogPost: result
-    })
-  })
-  .catch(err=>{
-    res.status(500).send({msg:"unsuccess get blog post"})
-  })
-}
-
-let editBlog = (req, res) => {
-  Blog.update({ _id: req.params.id }, {
-    userId: req.decoded.id,
-    title: req.body.title,
-    article: req.body.article
-  })
-  .then(result=>{
-    Blog.findOne({ _id: req.params.id })
-    .then(newEdit=>{
-      res.status(200).send({
-        msg: "success",
-        newBlogPost: newEdit
-      })
-    })
-    .catch(err=>{
-      res.status(500).send({msg:"unsuccess get blog post"})
-    })
-
-  })
-  .catch(err=>{
-    res.status(400).send({msg: err})
-  })
-}
-
-let delBlog = (req, res) => {
-  Blog.findOne({ _id: req.params.id })
-  .then(before=>{
-    Blog.remove({ _id: req.params.id })
-    .then(result=>{
-      res.status(200).send({
-        msg: "success",
-        deleted: before
-      })
-
-    })
-    .catch(err=>{
-      res.status(400).send({msg: err})
-    })
-
-  })
-  .catch(err=>{
-    res.status(400).send({msg: err})
-  })
-}
-
-let verify = (req, res) => {
-  res.status(200).send({msg:"success"})
-}
-
 module.exports = {
   welcomePage,
-  postBlog,
-  getBlog,
-  getBlogs,
-  editBlog,
-  delBlog,
+  postJepret,
+  getJepret,
+  getJeprets,
+  editJepret,
+  delJepret,
   signin,
   signup,
   signfb

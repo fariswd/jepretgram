@@ -8,7 +8,8 @@ const state = {
   loginStatus: false,
   userData: {
     userId: '',
-    token: ''
+    token: '',
+    tokenfb: ''
   }
 }
 
@@ -21,18 +22,21 @@ const mutations = {
     state.loginStatus = false
     state.userData.userId = ''
     state.userData.token = ''
+    state.userData.tokenfb = ''
   }
 }
 
 const actions = {
   checkLogin: function ({ commit }) {
     if (localStorage.getItem('userData')) {
-      let tokenfb = JSON.parse(localStorage.getItem('userData')).token
+      let userData = JSON.parse(localStorage.getItem('userData'))
+      let tokenfb = userData.tokenfb
       axios.post('http://localhost:3000/api/signfb', [], {
         headers: { token: tokenfb }
       })
       .then(({ data }) => {
         if (data.msg === 'success') {
+          console.log(data.token)
           localStorage.setItem('userData', JSON.stringify(data))
           commit('changeLoginStatus', data)
         }

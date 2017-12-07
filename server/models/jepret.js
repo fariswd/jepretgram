@@ -11,7 +11,8 @@ let jepretSchema = new Schema({
   },
   image: String,
   imageurl: String,
-  caption: String
+  caption: String,
+  love: []
 });
 
 let Jepret = mongoose.model('Jepret', jepretSchema);

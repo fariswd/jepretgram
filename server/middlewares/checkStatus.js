@@ -15,8 +15,7 @@ let checkStatus = (req, res, next) => {
         if(result){
           let tokenizer = {
             _id: result._id,
-            name: result.name,
-            isAdmin: result.isAdmin
+            name: result.name
           }
           jsonToken.signToken(tokenizer, (err, token) => {
             if (err) {
@@ -26,7 +25,8 @@ let checkStatus = (req, res, next) => {
               res.status(200).send({
                 msg: "success",
                 token: token,
-                userId: result._id
+                userId: result._id,
+                tokenfb: req.headers.token
               })
             }
           })
