@@ -11,7 +11,8 @@ const state = {
     token: '',
     tokenfb: ''
   },
-  jepret: []
+  jepret: [],
+  singleJepret: ''
 }
 
 const mutations = {
@@ -30,6 +31,21 @@ const mutations = {
   },
   saveAllJepret: function (state, payload) {
     state.jepret = payload
+  },
+  saveJepreted: function (state, payload) {
+    state.singleJepret = payload
+  },
+  delJepret: function (state, payload) {
+    let pos = state.jepret.findIndex(function (e) {
+      return e._id === payload._id
+    })
+    state.jepret.splice(pos, 1)
+  },
+  editJepreters: function (state, payload) {
+    let pos = state.jepret.findIndex(function (e) {
+      return e._id === payload._id
+    })
+    state.jepret.splice(pos, 1, payload)
   }
 }
 
@@ -98,6 +114,32 @@ const actions = {
     .catch(err => {
       console.log(err)
     })
+  },
+  getJepret: function ({ commit }, jepret) {
+    axios.get('http://localhost:3000/api/jepret/' + jepret)
+    .then(response => {
+      commit('saveJepreted', response.data.jepretPost)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  },
+  delJepret: function ({ commit }, jepret) {
+    let userData = JSON.parse(localStorage.getItem('userData'))
+    let token = userData.token
+    axios.delete('http://localhost:3000/api/jepret/' + jepret._id, {
+      headers: { token: token }
+    })
+    .then(response => {
+      console.log(response)
+      commit('delJepret', jepret)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  },
+  editedJepret: function ({ commit }, jepret) {
+    commit('editJepreters', jepret)
   }
 }
 

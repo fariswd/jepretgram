@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="container">
-    <form class="form-horizontal" v-on:submit.prevent="sendJepret">
+    <form class="form-horizontal" v-on:submit.prevent="editJepret">
       <fieldset>
-        <legend>Add Jepret</legend>
+        <legend>Edit Jepret</legend>
         <div class="form-group">
           <label for="imageurl" class="col-lg-2 control-label">Imageurl</label>
           <div class="col-lg-10">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   data: function () {
     return {
@@ -37,14 +37,25 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState([
+      'singleJepret'
+    ])
+  },
   methods: {
     ...mapActions([
-      'postNewJepret'
+      'editedJepret',
+      'getJepret'
     ]),
-    sendJepret: function () {
-      this.postNewJepret(this.newJepret)
-      this.$router.push('/')
+    editJepret: function () {
+      this.editedJepret(this.newJepret)
+      this.$router.push('/jepret/' + this.$route.params.id)
     }
+  },
+  created: function () {
+    this.getJepret(this.$route.params.id)
+    this.newJepret.imageurl = this.singleJepret.imageurl
+    this.newJepret.caption = this.singleJepret.caption
   }
 }
 </script>

@@ -59,7 +59,8 @@ let postJepret = (req, res) => {
       userId: req.decoded._id,
       image: req.body.image,
       imageurl: req.body.imageurl,
-      caption: req.body.caption
+      caption: req.body.caption,
+      createdAt: new Date()
     })
     jepret.save()
     .then(result=>{
@@ -79,6 +80,8 @@ let postJepret = (req, res) => {
 
 let getJepret = (req, res) => {
   Jepret.findOne({ _id: req.params.id })
+  .populate('userId')
+  .exec()
   .then(result=>{
     res.status(200).send({
       msg: "success",
@@ -91,8 +94,9 @@ let getJepret = (req, res) => {
 }
 
 let getJeprets = (req, res) => {
-  console.log('---------------here')
   Jepret.find()
+  .populate('userId')
+  .exec()
   .then(result=>{
     res.status(200).send({
       msg: "success",

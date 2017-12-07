@@ -12,6 +12,7 @@ let jepretSchema = new Schema({
   image: String,
   imageurl: String,
   caption: String,
+  createdAt: Date,
   love: []
 });
 
